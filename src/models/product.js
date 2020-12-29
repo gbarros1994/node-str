@@ -11,7 +11,7 @@ const schema = new Schema({
     },
     slug: {
         type: String,
-        required: true,
+        required: [true, 'O slug é obrigatório'],
         trim: true,
         index: true,
         unique: true,
@@ -33,8 +33,7 @@ const schema = new Schema({
     tags: [{
             type: String,
             required: true
-    }]
-
+    }],
 });
 
 module.exports = mongoose.model('Pr4oduct', schema);
