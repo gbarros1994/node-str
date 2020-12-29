@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 
 exports.get = (req, res, next) => {
-    Product.find({
+    Product
+    .find({
         active: true
     }, 'title price slug')
     .then((data => {
@@ -31,13 +32,13 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    const id = req.params.id;
     Product
     .findByIdAndUpdate(req.params.id, {
         $set: {
             title: req.body.title,
             description: req.body.description,
-            price: req.body.price
+            price: req.body.price,
+            slug: req.body.slug
         }
     }).then(x => {
         res.status(200).send({
@@ -52,11 +53,23 @@ exports.put = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    res.status(201).send(req.body);
+    Product
+    .findOneAndRemove(req.params.id)
+    .then(x => {
+        res.status(200).send({
+            messagE: 'Produto removido com sucesso!'
+        });
+    }).catch(e => {
+        res.status(400).send({
+            message: 'Falha ao remover',
+            data: e
+        });
+    });
 };
 
 exports.getBySlug = (req, res, next) => {
-    Product.findOne({
+    Product
+    .findOne({
         slug: req.params.slug,
         active: true
     }, 'title description price slug tags')
