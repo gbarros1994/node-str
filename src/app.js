@@ -6,7 +6,11 @@ const app = express();
 const router = express.Router();
 
 //Connecta ao banco
-mongoose.connect('mongodb+srv://gbarros1994:gbarros1994@cluster0.8fmf8.mongodb.net/ndstr?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://gbarros1994:gbarros1994@cluster0.8fmf8.mongodb.net/ndstr?retryWrites=true&w=majority',
+{
+    useNewUrlParser: true , 
+    useCreateIndex: true
+});
 
 //CARREGA OS MODELS
 const Product = require('./models/product');
