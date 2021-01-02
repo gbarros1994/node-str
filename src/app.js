@@ -9,7 +9,8 @@ const router = express.Router();
 mongoose.connect('mongodb+srv://gbarros1994:gbarros1994@cluster0.8fmf8.mongodb.net/ndstr?retryWrites=true&w=majority',
 {
     useNewUrlParser: true , 
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true
 });
 
 //CARREGA OS MODELS

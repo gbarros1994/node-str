@@ -3,18 +3,27 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 const ValidationContract = require('../validators/fluent-validator');
+const repository = require('../repositories/product-repository');
 
 exports.get = (req, res, next) => {
-    Product
-    .find({
-        active: true
-    }, 'title price slug')
+    repository
+    .get()
     .then((data => {
         res.status(200).send(data);
     })).catch(e => {
         res.status(400).send(e);
     });
 },
+
+exports.getBySlug = (req, res, next) => {
+    repository
+    .getBySlug(req.params.slug)
+    .then((data => {
+        res.status(200).send(data);
+    })).catch(e => {
+        res.status(400).send(e);
+    });
+}
 
 exports.post = (req, res, next) => {
     let contract = new ValidationContract();
@@ -29,9 +38,8 @@ exports.post = (req, res, next) => {
         return;
     }
 
-    var product = new Product();
-    product
-    .save()
+    repository
+    .create(req.body)
     .then((response => {
         res.status(201).send({
             message: 'Produto cadastrado com sucesso'
@@ -45,15 +53,9 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    Product
-    .findByIdAndUpdate(req.params.id, {
-        $set: {
-            title: req.body.title,
-            description: req.body.description,
-            price: req.body.price,
-            slug: req.body.slug
-        }
-    }).then(x => {
+    repository
+    .update(req.params.id, rep.body)
+    .then(x => {
         res.status(200).send({
             message: 'Produto atualizado com sucesso!'
         });
@@ -66,8 +68,7 @@ exports.put = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Product
-    .findOneAndRemove(req.params.id)
+    repository.delete(req.body.id)
     .then(x => {
         res.status(200).send({
             messagE: 'Produto removido com sucesso!'
@@ -79,16 +80,3 @@ exports.delete = (req, res, next) => {
         });
     });
 };
-
-exports.getBySlug = (req, res, next) => {
-    Product
-    .findOne({
-        slug: req.params.slug,
-        active: true
-    }, 'title description price slug tags')
-    .then((data => {
-        res.status(200).send(data);
-    })).catch(e => {
-        res.status(400).send(e);
-    });
-}
