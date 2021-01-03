@@ -15,6 +15,8 @@ mongoose.connect('mongodb+srv://gbarros1994:gbarros1994@cluster0.8fmf8.mongodb.n
 
 //CARREGA OS MODELS
 const Product = require('./models/product');
+const Customer = require('./models/customer');
+const Order = require('./models/order');
 
 //CARREGA AS ROTAS 
 const indexRoute = require('./routes/index-route');
