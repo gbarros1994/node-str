@@ -3,6 +3,6 @@ global.EMAIL_TMPL = '<strong>{0}</strong>';
 
 module.exports = {
     connectionString: 'mongodb+srv://gbarros1994:gbarros1994@cluster0.8fmf8.mongodb.net/ndstr?retryWrites=true&w=majority',
-    sendgridKey: 'TBD',
+    sendgridKey: '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',
     containerConnectionString: 'TBD'
 }
