@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const Order = mongoose.model('Order');
 
 exports.get = async() => {
-    var res = await Order.find({});
+    var res = await Order.find({})
+        .populate('customer')
+        .populate('items.product');
     return res;
 }
 
