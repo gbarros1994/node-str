@@ -1,6 +1,8 @@
 'use strict';
 const ValidationContract = require('../validators/fluent-validator');
 const repository = require('../repositories/product-repository');
+const azure = require('azure-storage');
+const config = require('../config');
 
 exports.get = async(req, res, next) => {
     try {
@@ -39,7 +41,36 @@ exports.post = async(req, res, next) => {
     }
 
     try {
-        await repository.create(req.body);
+
+        const blobSvc = azure.createBlobService(config.userImagesBlobConnectionString);
+
+        let filename = guid.raw().toString() + '.jpg';
+        //pega a imagem em base64
+        let rawdata = req.body.image;
+        //imagem vem com cabeçalho, então retiramos os seguintes itens
+        let matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        let type = matches[1];
+        //cria um buffer da imagem
+        let buffer = new Buffer(matches[2], 'base64');
+
+        //salva a imagem
+        await blobSvc.createBlockBlobFromText('product-images', filename, buffer, {
+            contentType: type
+        }, function (error, result, response) {
+            if (error) {
+                filename = 'default-product.jpg';
+            }
+        })
+
+        await repository.create({
+            title: req.body.title,
+            slug: req.body.slug,
+            description: req.body.description,
+            price: req.body.price,
+            active: true,
+            tags: req.body.tags,
+            image: filename
+        });
         res.status(201).send({
             message: 'Produto cadastrado com sucesso'
         });
