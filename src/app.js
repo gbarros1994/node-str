@@ -26,8 +26,20 @@ const customerRoute = require('./routes/customer-route');
 const orderRoute = require('./routes/order-route');
 const order = require('./models/order');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({
+    limit: '5mb'
+}));
+app.use(bodyParser.urlencoded({
+     extended: false
+}));
+
+//Habilita o CORS
+app.use(function(req, res, next) {
+    res.header('Access-Controll-Allow-Origin', '*');
+    res.header('Access-Controll-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
+    res.header('Access-Controll-Allow-Methods', 'GET, POST, PUT, DELETE');
+    next();
+})
 
 app.use('/', indexRoute);
 app.use('/products', productRoute);
